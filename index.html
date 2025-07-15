@@ -53,6 +53,18 @@
     }
 
     loadPrices();
+    async function loadPrices() {
+  try {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbyWM4ZUqCwSYKTPfbiyQiV2gvKVQMfLhsNvkMujtNR265Mu41srRn3xVNe3845RpXpN/exec');
+    const json = await response.json();
+    console.log('Data loaded:', json); // 👈 Watch this in browser console
+    productPrices = json;
+  } catch (error) {
+    console.error("API Fetch Failed:", error);
+    document.getElementById('result').innerText = "Could not load data.";
+  }
+}
+
   </script>
 </body>
 </html>
