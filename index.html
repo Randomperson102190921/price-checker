@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Price Checker</title>
+  <style>
+    body { font-family: Arial; max-width: 400px; margin: auto; padding: 20px; }
+    input, button { width: 100%; padding: 10px; margin: 8px 0; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h2>Did You Overpay?</h2>
+  <input id="product" placeholder="Product name (e.g. milk)" />
+  <input id="price" type="number" placeholder="Your price (e.g. 23.99)" />
+  <button onclick="checkPrice()">Check</button>
+  <p id="result"></p>
+
+  <script>
+    let productPrices = {};
+
+    async function loadPrices() {
+      try {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbyWM4ZUqCwSYKTPfbiyQiV2gvKVQMfLhsNvkMujtNR265Mu41srRn3xVNe3845RpXpN/exec');
+        productPrices = await response.json();
+      } catch (error) {
+        document.getElementById('result').innerText = "Failed to load price data.";
+        console.error(error);
+      }
+    }
+
+    function checkPrice() {
+      const productInput = document.getElementById('product').value.toLowerCase().trim();
+      const priceInput = parseFloat(document.getElementById('price').value);
+      const resultEl = document.getElementById('result');
+
+      if (!productInput || isNaN(priceInput)) {
+        resultEl.innerText = "Please enter valid product and price.";
+        return;
+      }
+
+      if (!productPrices[productInput]) {
+        resultEl.innerText = "No price data available for this product.";
+        return;
+      }
+
+      const avgPrice = productPrices[productInput];
+      if (priceInput > avgPrice) {
+        resultEl.innerText = `You overpaid by R${(priceInput - avgPrice).toFixed(2)}!`;
+      } else if (priceInput < avgPrice) {
+        resultEl.innerText = `You saved R${(avgPrice - priceInput).toFixed(2)}! Nice!`;
+      } else {
+        resultEl.innerText = "You paid the average price.";
+      }
+    }
+
+    loadPrices();
+  </script>
+</body>
+</html>
