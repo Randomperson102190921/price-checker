@@ -2,103 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Grocery Price Checker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Konzia Product Price Checker</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 30px auto;
-      padding: 0 15px;
-      background: #fafafa;
+      font-family: sans-serif;
+      background: #f8f8f8;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     h1 {
-      text-align: center;
-      color: #2c3e50;
+      margin-bottom: 1rem;
     }
-    form {
-      display: flex;
-      margin-bottom: 20px;
-    }
-    input[type="text"] {
-      flex-grow: 1;
-      padding: 10px;
-      font-size: 16px;
-      border: 2px solid #27ae60;
-      border-radius: 5px 0 0 5px;
-      outline: none;
-    }
-    input[type="text"]:focus {
-      border-color: #219150;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #27ae60;
-      border: none;
-      color: white;
-      cursor: pointer;
-      border-radius: 0 5px 5px 0;
-      transition: background-color 0.3s;
-    }
-    button:hover {
-      background-color: #219150;
+    input, button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      margin: 0.25rem;
     }
     #result {
-      padding: 15px;
-      background: white;
-      border-radius: 5px;
-      font-size: 18px;
-      min-height: 40px;
-      box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+      margin-top: 1rem;
+      font-weight: bold;
+      font-size: 1.2rem;
     }
   </style>
 </head>
 <body>
-
-  <h1>Grocery Price Checker</h1>
-
-  <form id="priceForm" onsubmit="checkPrice(event)">
-    <input type="text" id="productInput" placeholder="Enter product name..." autocomplete="off" />
-    <button type="submit">Check</button>
-  </form>
-
-  <div id="result">Loading prices...</div>
+  <h1>Konzia Price Checker</h1>
+  <input id="productInput" type="text" placeholder="Enter product (e.g. Bread)" />
+  <button onclick="fetchPrice()">Check Price</button>
+  <div id="result"></div>
 
   <script>
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbx4D3eTdom-AhxeH6Lea4rInNucH8po69eOMZA14iKoOgNhsMJ3fK31JpKbyK-yZwte/exec';
-    let products = {};
+    const apiUrl = "https://script.google.com/macros/s/AKfycbwZ9WrNvhWcXQ_aoMKTtHHj0GEmejngAjuZvH9JNEp-k3lsUy4f9RZIk2gu4kW_Dda6/exec";
 
-    async function loadPrices() {
-      try {
-        const response = await fetch(apiUrl);
-        products = await response.json();
-        document.getElementById('result').textContent = 'Enter a product name and hit Check.';
-        console.log('Prices loaded:', products);
-      } catch (error) {
-        console.error('Failed to load prices:', error);
-        document.getElementById('result').textContent = 'Failed to load prices. Try again later.';
-      }
-    }
-
-    function checkPrice(event) {
-      event.preventDefault();
+    async function fetchPrice() {
       const input = document.getElementById('productInput').value.trim().toLowerCase();
+      const resultDiv = document.getElementById('result');
+
       if (!input) {
-        document.getElementById('result').textContent = 'Please enter a product name.';
+        resultDiv.textContent = "Please enter a product name.";
         return;
       }
-      const productKey = Object.keys(products).find(key => key.toLowerCase() === input);
-      if (productKey) {
-        document.getElementById('result').textContent =
-          `🛒 ${productKey} costs R${products[productKey].toFixed(2)}`;
-      } else {
-        document.getElementById('result').textContent = `❌ No price found for "${input}"`;
+
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        if (data[input] !== undefined) {
+          resultDiv.textContent = `✅ ${input.charAt(0).toUpperCase() + input.slice(1)} costs R${data[input].toFixed(2)}`;
+        } else {
+          resultDiv.textContent = `❌ No price found for "${input}"`;
+        }
+      } catch (err) {
+        resultDiv.textContent = "Error fetching price data.";
+        console.error(err);
       }
     }
-
-    loadPrices();
   </script>
-
 </body>
 </html>
