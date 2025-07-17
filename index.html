@@ -2,121 +2,241 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Konzia Product Price Checker</title>
+  <title>KONZIA - Price Checker</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: #E2D3B3;
+      font-family: Arial;
       padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      max-width: 600px;
+      margin: auto;
+      background-color: #E2D3B3;
       color: #2E7D32;
     }
-
-    h1 {
+    label, select, input {
+      display: block;
       margin-bottom: 1rem;
-      color: #2E7D32;
+      width: 100%;
     }
-
-    input, button {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      margin: 0.25rem;
-      border: 2px solid #2E7D32;
-      border-radius: 5px;
-    }
-
-    input {
-      background-color: #fffde8;
-      color: #333;
-    }
-
     button {
+      padding: 0.5rem 1rem;
       background-color: #2E7D32;
       color: white;
+      border: none;
       cursor: pointer;
-      transition: background-color 0.2s ease;
     }
-
-    button:hover {
-      background-color: #27672a;
-    }
-
     #result {
       margin-top: 1rem;
       font-weight: bold;
-      font-size: 1.2rem;
-    }
-
-    .loader {
-      display: inline-block;
-      margin-top: 1rem;
-    }
-
-    .dot {
-      height: 12px;
-      width: 12px;
-      margin: 0 4px;
-      background-color: #2E7D32;
-      border-radius: 50%;
-      display: inline-block;
-      animation: bounce 1.2s infinite ease-in-out both;
-    }
-
-    .dot:nth-child(1) { animation-delay: 0s; }
-    .dot:nth-child(2) { animation-delay: 0.2s; }
-    .dot:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes bounce {
-      0%, 80%, 100% { transform: scale(0); }
-      40% { transform: scale(1); }
     }
   </style>
 </head>
 <body>
-  <h1>Price Checker</h1>
-  <input id="productInput" type="text" placeholder="Enter product (e.g. Bread)" />
-  <button onclick="fetchPrice()">Check Price</button>
-  <div id="loader" class="loader" style="display: none;">
-    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-  </div>
-  <div id="result"></div>
+
+  <h2>KONZIA - Price Checker</h2>
+
+  <label for="product">Product:</label>
+  <select id="product">
+    <option value="">--Select Product--</option>
+    <option value="Bread">Bread</option>
+    <option value="Milk">Milk</option>
+    <option value="Eggs">Eggs</option>
+    <option value="Maize Meal">Maize Meal</option>
+  </select>
+
+  <label for="city">City:</label>
+  <select id="city">
+    <option value="">--Select City--</option>
+    <option>Johannesburg</option>
+    <option>Pretoria</option>
+    <option>Soweto</option>
+    <option>Midrand</option>
+    <option>Benoni</option>
+    <option>Boksburg</option>
+    <option>Tembisa</option>
+    <option>Krugersdorp</option>
+    <option>Alberton</option>
+    <option>Roodepoort</option>
+    <option>Cape Town</option>
+    <option>Stellenbosch</option>
+    <option>Paarl</option>
+    <option>George</option>
+    <option>Worcester</option>
+    <option>Knysna</option>
+    <option>Mossel Bay</option>
+    <option>Bellville</option>
+    <option>Malmesbury</option>
+    <option>Mitchells Plain</option>
+    <option>Durban</option>
+    <option>Pietermaritzburg</option>
+    <option>Richards Bay</option>
+    <option>Newcastle</option>
+    <option>Empangeni</option>
+    <option>Ladysmith</option>
+    <option>Port Shepstone</option>
+    <option>Umlazi</option>
+    <option>Howick</option>
+    <option>Pinetown</option>
+    <option>Port Elizabeth</option>
+    <option>East London</option>
+    <option>Mthatha</option>
+    <option>Queenstown</option>
+    <option>Butterworth</option>
+    <option>Uitenhage</option>
+    <option>Aliwal North</option>
+    <option>Grahamstown</option>
+    <option>Cradock</option>
+    <option>Fort Beaufort</option>
+    <option>Bloemfontein</option>
+    <option>Welkom</option>
+    <option>Sasolburg</option>
+    <option>Kroonstad</option>
+    <option>Parys</option>
+    <option>Bethlehem</option>
+    <option>Phuthaditjhaba</option>
+    <option>Virginia</option>
+    <option>Ficksburg</option>
+    <option>Harrismith</option>
+    <option>Rustenburg</option>
+    <option>Klerksdorp</option>
+    <option>Mahikeng</option>
+    <option>Potchefstroom</option>
+    <option>Brits</option>
+    <option>Orkney</option>
+    <option>Zeerust</option>
+    <option>Vryburg</option>
+    <option>Lichtenburg</option>
+    <option>Swartruggens</option>
+    <option>Polokwane</option>
+    <option>Tzaneen</option>
+    <option>Mokopane</option>
+    <option>Thohoyandou</option>
+    <option>Musina</option>
+    <option>Lephalale</option>
+    <option>Giyani</option>
+    <option>Phalaborwa</option>
+    <option>Modimolle</option>
+    <option>Bela-Bela</option>
+    <option>Nelspruit</option>
+    <option>Witbank</option>
+    <option>Secunda</option>
+    <option>Middelburg</option>
+    <option>Ermelo</option>
+    <option>White River</option>
+    <option>Barberton</option>
+    <option>Bethal</option>
+    <option>Lydenburg</option>
+    <option>Delmas</option>
+    <option>Kimberley</option>
+    <option>Upington</option>
+    <option>Springbok</option>
+    <option>Kuruman</option>
+    <option>De Aar</option>
+    <option>Kathu</option>
+    <option>Postmasburg</option>
+    <option>Colesberg</option>
+    <option>Calvinia</option>
+    <option>Douglas</option>
+  </select>
+
+  <label for="shop">Shop:</label>
+  <select id="shop" onchange="toggleCustomShop()">
+    <option value="">--Select Shop--</option>
+    <option value="Shoprite">Shoprite</option>
+    <option value="Checkers">Checkers</option>
+    <option value="Pick n Pay">Pick n Pay</option>
+    <option value="Spar">Spar</option>
+    <option value="Boxer">Boxer</option>
+    <option value="OK Foods">OK Foods</option>
+    <option value="Makro">Makro</option>
+    <option value="Liquor City">Liquor City</option>
+    <option value="U Save">U Save</option>
+    <option value="Clicks">Clicks</option>
+    <option value="Game">Game</option>
+    <option value="other">Other</option>
+  </select>
+
+  <input type="text" id="customShop" placeholder="Enter shop name" style="display: none;" />
+
+  <label for="price">Price (R):</label>
+  <input type="number" id="price" step="0.01" placeholder="Enter price (e.g. 12.99)" />
+
+  <button onclick="submitPrice()">Submit</button>
+
+  <div id="result">&nbsp;</div>
 
   <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycbwZ9WrNvhWcXQ_aoMKTtHHj0GEmejngAjuZvH9JNEp-k3lsUy4f9RZIk2gu4kW_Dda6/exec";
+    const BASE_URL = 'https://script.google.com/macros/s/AKfycbzaas2bjtgGY0379JqHB2vC2aOoPu0DbgrQei9okZn3LSb3G_pole2qDUtbryc-hIAgDA/exec';
+    const AVERAGE_API = BASE_URL;
 
-    async function fetchPrice() {
-      const input = document.getElementById('productInput').value.trim().toLowerCase();
-      const resultDiv = document.getElementById('result');
-      const loader = document.getElementById('loader');
+    function toggleCustomShop() {
+      const shopSelect = document.getElementById("shop");
+      const customShopInput = document.getElementById("customShop");
+      if (shopSelect.value === "other") {
+        customShopInput.style.display = "block";
+      } else {
+        customShopInput.style.display = "none";
+        customShopInput.value = "";
+      }
+    }
 
-      resultDiv.textContent = "";
-      
-      if (!input) {
-        resultDiv.textContent = "Please enter a product name.";
+    async function submitPrice() {
+      const productEl = document.getElementById("product");
+      const cityEl = document.getElementById("city");
+      const shopSelectEl = document.getElementById("shop");
+      const customShopEl = document.getElementById("customShop");
+      const priceEl = document.getElementById("price");
+      const result = document.getElementById("result");
+
+      const product = productEl.value;
+      const city = cityEl.value;
+      const shopSelect = shopSelectEl.value;
+      const customShop = customShopEl.value.trim();
+      const price = parseFloat(priceEl.value);
+      const shop = shopSelect === "other" ? customShop : shopSelect;
+
+      if (!product || !city || !shop || isNaN(price)) {
+        alert("Please fill in all fields.");
         return;
       }
 
-      loader.style.display = "inline-block";
-
       try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
+        await fetch(BASE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product, city, shop, price, sheet: 'KONZIA_Raw' })
+        });
 
-        if (data[input] !== undefined) {
-          resultDiv.textContent = `✅ ${input.charAt(0).toUpperCase() + input.slice(1)} costs R${data[input].toFixed(2)}`;
+        const avgRes = await fetch(`${AVERAGE_API}?product=${encodeURIComponent(product)}&city=${encodeURIComponent(city)}`);
+        const avgData = await avgRes.json();
+        const avgPrice = parseFloat(avgData.average);
+
+        if (isNaN(avgPrice)) {
+          result.textContent = "Your data has been submitted. No price comparisons available yet.";
+          result.style.color = "#2E7D32";
+        } else if (price > avgPrice + 2) {
+          result.textContent = `😬 You overpaid by R${(price - avgPrice).toFixed(2)}!`;
+          result.style.color = 'red';
+        } else if (price < avgPrice - 2) {
+          result.textContent = `🔥 Deal! You saved R${(avgPrice - price).toFixed(2)}!`;
+          result.style.color = 'green';
         } else {
-          resultDiv.textContent = `❌ No price found for "${input}"`;
+          result.textContent = `👌 You paid the average price.`;
+          result.style.color = '#2E7D32';
         }
+
+        // Clear inputs
+        productEl.value = "";
+        cityEl.value = "";
+        shopSelectEl.value = "";
+        customShopEl.value = "";
+        customShopEl.style.display = "none";
+        priceEl.value = "";
+
       } catch (err) {
-        resultDiv.textContent = "Error fetching price data.";
-        console.error(err);
-      } finally {
-        loader.style.display = "none";
+        alert("Submission failed. Please try again.");
       }
     }
   </script>
+
 </body>
 </html>
