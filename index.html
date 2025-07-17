@@ -22,10 +22,26 @@
 <body>
 
   <label for="product">Product:</label>
-  <input type="text" id="product" placeholder="Enter product name" />
+  <select id="product">
+    <option value="">Select product</option>
+    <option value="Bread">Bread</option>
+    <option value="Milk">Milk</option>
+    <option value="Maize Meal">Maize Meal</option>
+    <option value="Rice">Rice</option>
+    <option value="Cooking Oil">Cooking Oil</option>
+    <option value="other">Other</option>
+  </select>
+  <input type="text" id="customProduct" placeholder="Enter product name" style="display: none;" />
 
   <label for="city">City:</label>
-  <input type="text" id="city" placeholder="Enter city name" />
+  <select id="city">
+    <option value="">Select city</option>
+    <option value="Johannesburg">Johannesburg</option>
+    <option value="Cape Town">Cape Town</option>
+    <option value="Durban">Durban</option>
+    <option value="Pretoria">Pretoria</option>
+    <option value="Bloemfontein">Bloemfontein</option>
+  </select>
 
   <label for="shop">Shop:</label>
   <select id="shop" onchange="toggleCustomShop()">
@@ -54,28 +70,32 @@
     function toggleCustomShop() {
       const shopSelect = document.getElementById("shop");
       const customShopInput = document.getElementById("customShop");
-      if (shopSelect.value === "other") {
-        customShopInput.style.display = "block";
-      } else {
-        customShopInput.style.display = "none";
-        customShopInput.value = "";
-      }
+      customShopInput.style.display = shopSelect.value === "other" ? "block" : "none";
+      if (shopSelect.value !== "other") customShopInput.value = "";
     }
+
+    function toggleCustomProduct() {
+      const productSelect = document.getElementById("product");
+      const customProductInput = document.getElementById("customProduct");
+      customProductInput.style.display = productSelect.value === "other" ? "block" : "none";
+      if (productSelect.value !== "other") customProductInput.value = "";
+    }
+
+    document.getElementById("product").addEventListener("change", toggleCustomProduct);
 
     async function submitPrice() {
       const productEl = document.getElementById("product");
       const cityEl = document.getElementById("city");
       const shopSelectEl = document.getElementById("shop");
       const customShopEl = document.getElementById("customShop");
+      const customProductEl = document.getElementById("customProduct");
       const priceEl = document.getElementById("price");
       const result = document.getElementById("result");
 
-      const product = productEl.value;
+      const product = productEl.value === "other" ? customProductEl.value.trim() : productEl.value;
       const city = cityEl.value;
-      const shopSelect = shopSelectEl.value;
-      const customShop = customShopEl.value.trim();
+      const shop = shopSelectEl.value === "other" ? customShopEl.value.trim() : shopSelectEl.value;
       const price = parseFloat(priceEl.value);
-      const shop = shopSelect === "other" ? customShop : shopSelect;
 
       if (!product || !city || !shop || isNaN(price)) {
         alert("Please fill in all fields.");
@@ -108,6 +128,8 @@
         }
 
         productEl.value = "";
+        customProductEl.value = "";
+        customProductEl.style.display = "none";
         cityEl.value = "";
         shopSelectEl.value = "";
         customShopEl.value = "";
@@ -122,4 +144,3 @@
 
 </body>
 </html>
-
