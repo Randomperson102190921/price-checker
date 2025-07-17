@@ -1,4 +1,35 @@
-ion>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konzia Price Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    label, select, input, button {
+      display: block;
+      margin: 10px 0;
+    }
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <label for="product">Product:</label>
+  <input type="text" id="product" placeholder="Enter product name" />
+
+  <label for="city">City:</label>
+  <input type="text" id="city" placeholder="Enter city name" />
+
+  <label for="shop">Shop:</label>
+  <select id="shop" onchange="toggleCustomShop()">
+    <option value="">Select shop</option>
     <option value="Makro">Makro</option>
     <option value="Liquor City">Liquor City</option>
     <option value="U Save">U Save</option>
@@ -76,7 +107,6 @@ ion>
           result.style.color = '#2E7D32';
         }
 
-        // Clear inputs
         productEl.value = "";
         cityEl.value = "";
         shopSelectEl.value = "";
@@ -92,3 +122,4 @@ ion>
 
 </body>
 </html>
+
