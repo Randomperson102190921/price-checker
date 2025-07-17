@@ -1,84 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Konzia Price Checker</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
     }
-    label, select, input, button {
-      display: block;
-      margin: 10px 0;
+
+    .container {
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 30px;
+      border-radius: 16px;
+      margin-top: 40px;
+      width: 90%;
+      max-width: 500px;
     }
-    #result {
-      margin-top: 15px;
+
+    h1 {
+      text-align: center;
+      color: #00796B;
+      margin-bottom: 20px;
+    }
+
+    label {
       font-weight: bold;
+      margin-top: 10px;
+    }
+
+    select, input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+
+    button {
+      background-color: #00796B;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #004D40;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Konzia Price Checker</h1>
 
-  <label for="product">Product:</label>
-  <select id="product">
-    <option value="">Select product</option>
-    <option value="Bread">Bread</option>
-    <option value="Milk">Milk</option>
-    <option value="Maize Meal">Maize Meal</option>
-    <option value="Rice">Rice</option>
-    <option value="Cooking Oil">Cooking Oil</option>
-    <option value="other">Other</option>
-  </select>
-  <input type="text" id="customProduct" placeholder="Enter product name" style="display: none;" />
+    <label for="product">Product:</label>
+    <select id="product">
+      <option value="">Select product</option>
+      <option value="Bread">Bread</option>
+      <option value="Milk">Milk</option>
+      <option value="Maize Meal">Maize Meal</option>
+      <option value="Rice">Rice</option>
+      <option value="Cooking Oil">Cooking Oil</option>
+      <option value="other">Other</option>
+    </select>
+    <input type="text" id="customProduct" placeholder="Enter product name" style="display: none;" />
 
-  <label for="city">City:</label>
-  <select id="city">
-    <option value="">Select city</option>
-    <option value="Johannesburg">Johannesburg</option>
-    <option value="Cape Town">Cape Town</option>
-    <option value="Durban">Durban</option>
-    <option value="Pretoria">Pretoria</option>
-    <option value="Bloemfontein">Bloemfontein</option>
-  </select>
+    <label for="city">City:</label>
+    <select id="city">
+      <option value="">Select city</option>
+      <option value="Johannesburg">Johannesburg</option>
+      <option value="Cape Town">Cape Town</option>
+      <option value="Durban">Durban</option>
+      <option value="Pretoria">Pretoria</option>
+      <option value="Bloemfontein">Bloemfontein</option>
+    </select>
 
-  <label for="shop">Shop:</label>
-  <select id="shop" onchange="toggleCustomShop()">
-    <option value="">Select shop</option>
-    <option value="Makro">Makro</option>
-    <option value="Liquor City">Liquor City</option>
-    <option value="U Save">U Save</option>
-    <option value="Clicks">Clicks</option>
-    <option value="Game">Game</option>
-    <option value="other">Other</option>
-  </select>
+    <label for="shop">Shop:</label>
+    <select id="shop" onchange="toggleCustomShop()">
+      <option value="">Select shop</option>
+      <option value="Makro">Makro</option>
+      <option value="Liquor City">Liquor City</option>
+      <option value="U Save">U Save</option>
+      <option value="Clicks">Clicks</option>
+      <option value="Game">Game</option>
+      <option value="other">Other</option>
+    </select>
+    <input type="text" id="customShop" placeholder="Enter shop name" style="display: none;" />
 
-  <input type="text" id="customShop" placeholder="Enter shop name" style="display: none;" />
+    <label for="price">Price (R):</label>
+    <input type="number" id="price" step="0.01" placeholder="Enter price (e.g. 12.99)" />
 
-  <label for="price">Price (R):</label>
-  <input type="number" id="price" step="0.01" placeholder="Enter price (e.g. 12.99)" />
+    <button onclick="submitPrice()">Submit</button>
 
-  <button onclick="submitPrice()">Submit</button>
-
-  <div id="result">&nbsp;</div>
+    <div id="result">&nbsp;</div>
+  </div>
 
   <script>
     const BASE_URL = '/api';
     const AVERAGE_API = BASE_URL;
 
     function toggleCustomShop() {
-      const shopSelect = document.getElementById("shop");
-      const customShopInput = document.getElementById("customShop");
-      customShopInput.style.display = shopSelect.value === "other" ? "block" : "none";
-      if (shopSelect.value !== "other") customShopInput.value = "";
+      const shop = document.getElementById("shop");
+      const customShop = document.getElementById("customShop");
+      customShop.style.display = shop.value === "other" ? "block" : "none";
+      if (shop.value !== "other") customShop.value = "";
     }
 
     function toggleCustomProduct() {
-      const productSelect = document.getElementById("product");
-      const customProductInput = document.getElementById("customProduct");
-      customProductInput.style.display = productSelect.value === "other" ? "block" : "none";
-      if (productSelect.value !== "other") customProductInput.value = "";
+      const product = document.getElementById("product");
+      const customProduct = document.getElementById("customProduct");
+      customProduct.style.display = product.value === "other" ? "block" : "none";
+      if (product.value !== "other") customProduct.value = "";
     }
 
     document.getElementById("product").addEventListener("change", toggleCustomProduct);
@@ -86,7 +136,7 @@
     async function submitPrice() {
       const productEl = document.getElementById("product");
       const cityEl = document.getElementById("city");
-      const shopSelectEl = document.getElementById("shop");
+      const shopEl = document.getElementById("shop");
       const customShopEl = document.getElementById("customShop");
       const customProductEl = document.getElementById("customProduct");
       const priceEl = document.getElementById("price");
@@ -94,11 +144,23 @@
 
       const product = productEl.value === "other" ? customProductEl.value.trim() : productEl.value;
       const city = cityEl.value;
-      const shop = shopSelectEl.value === "other" ? customShopEl.value.trim() : shopSelectEl.value;
+      const shop = shopEl.value === "other" ? customShopEl.value.trim() : shopEl.value;
       const price = parseFloat(priceEl.value);
 
       if (!product || !city || !shop || isNaN(price)) {
-        alert("Please fill in all fields.");
+        alert("Please fill in all fields correctly.");
+        return;
+      }
+
+      if (price > 500) {
+        result.textContent = "⚠️ Price too high. Check your input.";
+        result.style.color = "red";
+        return;
+      }
+
+      if (price < 5) {
+        result.textContent = "⚠️ Price too low. Check your input.";
+        result.style.color = "red";
         return;
       }
 
@@ -110,37 +172,49 @@
         });
 
         const avgRes = await fetch(`${AVERAGE_API}?product=${encodeURIComponent(product)}&city=${encodeURIComponent(city)}`);
-        const avgData = await avgRes.json();
-        const avgPrice = parseFloat(avgData.average);
+        const data = await avgRes.json();
 
-        if (isNaN(avgPrice)) {
-          result.textContent = "Your data has been submitted. No price comparisons available yet.";
+        let prices = data?.prices || [];
+        prices = prices.map(p => parseFloat(p)).filter(p => !isNaN(p) && p >= 5 && p <= 500);
+        prices.push(price); // include current submission
+
+        prices.sort((a, b) => a - b);
+
+        const q1 = prices[Math.floor(prices.length / 4)];
+        const q3 = prices[Math.floor((3 * prices.length) / 4)];
+        const iqr = q3 - q1;
+
+        const filtered = prices.filter(p => p >= (q1 - 1.5 * iqr) && p <= (q3 + 1.5 * iqr));
+        const avg = filtered.reduce((a, b) => a + b, 0) / filtered.length;
+
+        if (filtered.length < 2) {
+          result.textContent = "✅ Submitted. Not enough data for comparison yet.";
           result.style.color = "#2E7D32";
-        } else if (price > avgPrice + 2) {
-          result.textContent = `😬 You overpaid by R${(price - avgPrice).toFixed(2)}!`;
+        } else if (price > avg + 2) {
+          result.textContent = `😬 You overpaid by R${(price - avg).toFixed(2)}!`;
           result.style.color = 'red';
-        } else if (price < avgPrice - 2) {
-          result.textContent = `🔥 Deal! You saved R${(avgPrice - price).toFixed(2)}!`;
+        } else if (price < avg - 2) {
+          result.textContent = `🔥 Deal! You saved R${(avg - price).toFixed(2)}!`;
           result.style.color = 'green';
         } else {
-          result.textContent = `👌 You paid the average price.`;
+          result.textContent = `👌 You paid around the average.`;
           result.style.color = '#2E7D32';
         }
 
+        // Reset form
         productEl.value = "";
         customProductEl.value = "";
         customProductEl.style.display = "none";
         cityEl.value = "";
-        shopSelectEl.value = "";
+        shopEl.value = "";
         customShopEl.value = "";
         customShopEl.style.display = "none";
         priceEl.value = "";
 
-      } catch (err) {
-        alert("Submission failed. Please try again.");
+      } catch (error) {
+        alert("Submission failed. Try again.");
       }
     }
   </script>
-
 </body>
 </html>
