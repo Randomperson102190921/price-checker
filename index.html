@@ -6,89 +6,67 @@
   <title>Konzia Price Checker</title>
   <style>
     body {
+      background-color: #E2D3B3;
+      color: #2E7D32;
       font-family: Arial, sans-serif;
       padding: 30px;
-      background-color: #f9f9f9;
-      color: #333;
+      line-height: 1.6;
     }
 
-    label {
-      font-weight: bold;
-      margin-top: 20px;
+    label, select, input, button {
       display: block;
+      margin: 20px 0;
+      font-size: 1.1rem;
+      color: #2E7D32;
     }
 
-    select, input, button {
-      width: 100%;
-      padding: 10px 12px;
-      margin: 10px 0 20px;
-      font-size: 16px;
-      border: 1px solid #ccc;
+    input, select {
+      padding: 10px;
+      border: 1px solid #2E7D32;
       border-radius: 6px;
+      background-color: #fff;
+      color: #2E7D32;
     }
 
     button {
-      background-color: #1976D2;
-      color: white;
+      background-color: #2E7D32;
+      color: #fff;
+      padding: 12px 20px;
+      font-size: 1rem;
       border: none;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s ease;
+      transition: all 0.3s ease;
     }
 
-    button:disabled {
-      background-color: #90caf9;
-      cursor: wait;
-    }
-
-    button:hover:not(:disabled) {
-      background-color: #1565C0;
+    button:hover {
+      background-color: #27692C;
     }
 
     #result {
       margin-top: 25px;
-      font-size: 18px;
       font-weight: bold;
-      min-height: 24px;
+      font-size: 1.2rem;
     }
 
-    .dot-loader {
-      display: none;
-      justify-content: center;
-      align-items: center;
-      height: 40px;
-      margin-top: 10px;
-    }
-
-    .dot-loader span {
+    .loading-dots {
       display: inline-block;
-      width: 10px;
-      height: 10px;
-      margin: 0 4px;
-      background-color: #555;
-      border-radius: 50%;
-      animation: bounce 1.4s infinite ease-in-out both;
+      font-size: 1.5rem;
     }
 
-    .dot-loader span:nth-child(1) {
-      animation-delay: -0.32s;
+    .loading-dots span {
+      animation: bounce 1.4s infinite;
+      display: inline-block;
+      margin: 0 2px;
     }
 
-    .dot-loader span:nth-child(2) {
-      animation-delay: -0.16s;
-    }
-
-    .dot-loader span:nth-child(3) {
-      animation-delay: 0;
-    }
+    .loading-dots span:nth-child(1) { animation-delay: 0s; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
 
     @keyframes bounce {
-      0%, 80%, 100% {
-        transform: scale(0.6);
-      } 
-      40% {
-        transform: scale(1);
-      }
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
     }
   </style>
 </head>
@@ -133,11 +111,11 @@
 
   <button onclick="submitPrice()">Submit</button>
 
-  <div id="loader" class="dot-loader">
-    <span></span><span></span><span></span>
+  <div id="result">
+    <div class="loading-dots" id="loading" style="display: none;">
+      <span>.</span><span>.</span><span>.</span>
+    </div>
   </div>
-
-  <div id="result">&nbsp;</div>
 
   <script>
     const BASE_URL = '/api';
@@ -167,36 +145,32 @@
       const customProductEl = document.getElementById("customProduct");
       const priceEl = document.getElementById("price");
       const result = document.getElementById("result");
-      const loader = document.getElementById("loader");
-      const submitBtn = document.querySelector("button");
+      const loader = document.getElementById("loading");
 
       const product = productEl.value === "other" ? customProductEl.value.trim() : productEl.value;
       const city = cityEl.value;
       const shop = shopSelectEl.value === "other" ? customShopEl.value.trim() : shopSelectEl.value;
       const price = parseFloat(priceEl.value);
 
-      result.textContent = "";
-      result.style.color = "#333";
-
       if (!product || !city || !shop || isNaN(price)) {
         alert("Please fill in all fields.");
         return;
       }
 
-      if (price > 500) {
-        result.textContent = "😵 That price is too high. Double check it!";
-        result.style.color = "darkred";
-        return;
-      }
-
       if (price < 5) {
-        result.textContent = "😕 That price is too low to be realistic.";
-        result.style.color = "orange";
+        result.textContent = "❌ Price too low to be valid (below R5).";
+        result.style.color = "red";
         return;
       }
 
-      loader.style.display = "flex";
-      submitBtn.disabled = true;
+      if (price > 500) {
+        result.textContent = "❌ Price too high to be valid (above R500).";
+        result.style.color = "red";
+        return;
+      }
+
+      loader.style.display = "inline-block";
+      result.textContent = "";
 
       try {
         await fetch(BASE_URL, {
@@ -209,8 +183,10 @@
         const avgData = await avgRes.json();
         const avgPrice = parseFloat(avgData.average);
 
+        loader.style.display = "none";
+
         if (isNaN(avgPrice)) {
-          result.textContent = "Your data has been submitted. No price comparisons available yet.";
+          result.textContent = "✅ Your data has been submitted. No price comparisons available yet.";
           result.style.color = "#2E7D32";
         } else if (price > avgPrice + 2) {
           result.textContent = `😬 You overpaid by R${(price - avgPrice).toFixed(2)}!`;
@@ -223,7 +199,7 @@
           result.style.color = '#2E7D32';
         }
 
-        // Reset the form
+        // Reset form
         productEl.value = "";
         customProductEl.value = "";
         customProductEl.style.display = "none";
@@ -234,13 +210,12 @@
         priceEl.value = "";
 
       } catch (err) {
-        alert("Submission failed. Please try again.");
-      } finally {
         loader.style.display = "none";
-        submitBtn.disabled = false;
+        alert("Submission failed. Please try again.");
       }
     }
   </script>
 
 </body>
 </html>
+
